@@ -1,0 +1,7 @@
+name: rush_audio
+publish_to: none
+environment:
+  sdk: ^3.11.0
+workspace:
+  - packages/rush_synth
+  

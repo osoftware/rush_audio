@@ -1,0 +1,13 @@
+# TODO change the below options/lints as you see fit
+analyzer:
+  exclude:
+    - '**.freezed.dart'
+    - '**.g.dart'
+  language:
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    invalid_annotation_target: ignore
+
+linter:
+  rules:

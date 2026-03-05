@@ -1,0 +1,2 @@
+[workspace]
+members = ["packages/rush_midi/native"]
