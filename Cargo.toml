@@ -1,2 +1,3 @@
 [workspace]
-members = ["packages/rush_midi/native"]
+members = ["packages/rush_synth/rust"]
+resolver = "3"

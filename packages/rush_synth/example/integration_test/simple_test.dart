@@ -6,6 +6,7 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async => await RustLib.init());
   test('Can call rust function', () async {
-    expect(greet(name: "Tom"), "Hello, Tom!");
+    final synth = RushSynth.newInstance(soundfontPath: 'soundfont.sf2');
+    expect(synth, isNotNull);
   });
 }
