@@ -9,30 +9,19 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 // These functions are ignored because they are not marked as `pub`: `build_stream`, `fill_output_buffer`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `drop`
 
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RushSynth>>
-abstract class RushSynth implements RustOpaqueInterface {
-  Future<void> allNotesOff();
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RushSequencer>>
+abstract class RushSequencer implements RustOpaqueInterface {
+  Future<bool> endOfSequence();
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<RushSynth> newInstance({required String soundfontPath}) =>
-      RushSynthLib.instance.api.crateApiSynthRushSynthNew(
+  static Future<RushSequencer> newInstance({required String soundfontPath}) =>
+      RushSynthLib.instance.api.crateApiSequencerRushSequencerNew(
         soundfontPath: soundfontPath,
       );
 
-  Future<void> noteOff({required int channel, required int key});
+  Future<void> play({required String midiPath, required bool playLoop});
 
-  /// channel: MIDI channel (0-15)
-  /// key: MIDI key (0-127)
-  /// velocity: MIDI velocity (0-127)
-  Future<void> noteOn({
-    required int channel,
-    required int key,
-    required int velocity,
-  });
-
-  Future<void> pause();
-
-  Future<void> start();
+  Future<void> setSpeed({required double speed});
 
   Future<void> stop();
 }

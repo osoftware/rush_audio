@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/sequencer.dart';
 import 'api/synth.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -12,15 +13,17 @@ import 'frb_generated.io.dart'
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// Main entrypoint of the Rust API
-class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
+class RushSynthLib
+    extends
+        BaseEntrypoint<RushSynthLibApi, RushSynthLibApiImpl, RushSynthLibWire> {
   @internal
-  static final instance = RustLib._();
+  static final instance = RushSynthLib._();
 
-  RustLib._();
+  RushSynthLib._();
 
   /// Initialize flutter_rust_bridge
   static Future<void> init({
-    RustLibApi? api,
+    RushSynthLibApi? api,
     BaseHandler? handler,
     ExternalLibrary? externalLibrary,
     bool forceSameCodegenVersion = true,
@@ -35,7 +38,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   /// Initialize flutter_rust_bridge in mock mode.
   /// No libraries for FFI are loaded.
-  static void initMock({required RustLibApi api}) {
+  static void initMock({required RushSynthLibApi api}) {
     instance.initMockImpl(api: api);
   }
 
@@ -46,12 +49,12 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   static void dispose() => instance.disposeImpl();
 
   @override
-  ApiImplConstructor<RustLibApiImpl, RustLibWire> get apiImplConstructor =>
-      RustLibApiImpl.new;
+  ApiImplConstructor<RushSynthLibApiImpl, RushSynthLibWire>
+  get apiImplConstructor => RushSynthLibApiImpl.new;
 
   @override
-  WireConstructor<RustLibWire> get wireConstructor =>
-      RustLibWire.fromExternalLibrary;
+  WireConstructor<RushSynthLibWire> get wireConstructor =>
+      RushSynthLibWire.fromExternalLibrary;
 
   @override
   Future<void> executeRustInitializers() async {}
@@ -64,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -1469169164;
+  int get rustContentHash => -507580927;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -74,7 +77,30 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
       );
 }
 
-abstract class RustLibApi extends BaseApi {
+abstract class RushSynthLibApi extends BaseApi {
+  Future<bool> crateApiSequencerRushSequencerEndOfSequence({
+    required RushSequencer that,
+  });
+
+  Future<RushSequencer> crateApiSequencerRushSequencerNew({
+    required String soundfontPath,
+  });
+
+  Future<void> crateApiSequencerRushSequencerPlay({
+    required RushSequencer that,
+    required String midiPath,
+    required bool playLoop,
+  });
+
+  Future<void> crateApiSequencerRushSequencerSetSpeed({
+    required RushSequencer that,
+    required double speed,
+  });
+
+  Future<void> crateApiSequencerRushSequencerStop({
+    required RushSequencer that,
+  });
+
   Future<void> crateApiSynthRushSynthAllNotesOff({required RushSynth that});
 
   Future<RushSynth> crateApiSynthRushSynthNew({required String soundfontPath});
@@ -99,6 +125,15 @@ abstract class RustLibApi extends BaseApi {
   Future<void> crateApiSynthRushSynthStop({required RushSynth that});
 
   RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_RushSequencer;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_RushSequencer;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_RushSequencerPtr;
+
+  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_RushSynth;
 
   RustArcDecrementStrongCountFnType
@@ -107,13 +142,195 @@ abstract class RustLibApi extends BaseApi {
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RushSynthPtr;
 }
 
-class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
-  RustLibApiImpl({
+class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
+    implements RushSynthLibApi {
+  RushSynthLibApiImpl({
     required super.handler,
     required super.wire,
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
+
+  @override
+  Future<bool> crateApiSequencerRushSequencerEndOfSequence({
+    required RushSequencer that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 1,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_bool,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiSequencerRushSequencerEndOfSequenceConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSequencerRushSequencerEndOfSequenceConstMeta =>
+      const TaskConstMeta(
+        debugName: "RushSequencer_end_of_sequence",
+        argNames: ["that"],
+      );
+
+  @override
+  Future<RushSequencer> crateApiSequencerRushSequencerNew({
+    required String soundfontPath,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(soundfontPath, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 2,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiSequencerRushSequencerNewConstMeta,
+        argValues: [soundfontPath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSequencerRushSequencerNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "RushSequencer_new",
+        argNames: ["soundfontPath"],
+      );
+
+  @override
+  Future<void> crateApiSequencerRushSequencerPlay({
+    required RushSequencer that,
+    required String midiPath,
+    required bool playLoop,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+            that,
+            serializer,
+          );
+          sse_encode_String(midiPath, serializer);
+          sse_encode_bool(playLoop, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 3,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiSequencerRushSequencerPlayConstMeta,
+        argValues: [that, midiPath, playLoop],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSequencerRushSequencerPlayConstMeta =>
+      const TaskConstMeta(
+        debugName: "RushSequencer_play",
+        argNames: ["that", "midiPath", "playLoop"],
+      );
+
+  @override
+  Future<void> crateApiSequencerRushSequencerSetSpeed({
+    required RushSequencer that,
+    required double speed,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+            that,
+            serializer,
+          );
+          sse_encode_f_64(speed, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 4,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiSequencerRushSequencerSetSpeedConstMeta,
+        argValues: [that, speed],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSequencerRushSequencerSetSpeedConstMeta =>
+      const TaskConstMeta(
+        debugName: "RushSequencer_set_speed",
+        argNames: ["that", "speed"],
+      );
+
+  @override
+  Future<void> crateApiSequencerRushSequencerStop({
+    required RushSequencer that,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+            that,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 5,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiSequencerRushSequencerStopConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSequencerRushSequencerStopConstMeta =>
+      const TaskConstMeta(debugName: "RushSequencer_stop", argNames: ["that"]);
 
   @override
   Future<void> crateApiSynthRushSynthAllNotesOff({required RushSynth that}) {
@@ -128,7 +345,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 1,
+            funcId: 6,
             port: port_,
           );
         },
@@ -159,7 +376,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 2,
+            funcId: 7,
             port: port_,
           );
         },
@@ -199,7 +416,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 8,
             port: port_,
           );
         },
@@ -241,7 +458,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 4,
+            funcId: 9,
             port: port_,
           );
         },
@@ -275,7 +492,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 5,
+            funcId: 10,
             port: port_,
           );
         },
@@ -306,7 +523,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 6,
+            funcId: 11,
             port: port_,
           );
         },
@@ -337,7 +554,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 7,
+            funcId: 12,
             port: port_,
           );
         },
@@ -356,6 +573,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "RushSynth_stop", argNames: ["that"]);
 
   RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_RushSequencer => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_RushSequencer => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer;
+
+  RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_RushSynth => wire
       .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth;
 
@@ -370,12 +595,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RushSequencer
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   RushSynth
   dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return RushSynthImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RushSequencer
+  dco_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -388,12 +631,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RushSequencer
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
   RushSynth
   dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return RushSynthImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RushSequencer
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -409,6 +670,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
+  }
+
+  @protected
+  bool dco_decode_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
+  }
+
+  @protected
+  double dco_decode_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as double;
   }
 
   @protected
@@ -449,12 +722,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RushSequencer
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   RushSynth
   sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return RushSynthImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RushSequencer
+  sse_decode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -473,12 +770,36 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RushSequencer
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
   RushSynth
   sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return RushSynthImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RushSequencer
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RushSequencerImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -501,6 +822,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
     return utf8.decoder.convert(inner);
+  }
+
+  @protected
+  bool sse_decode_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  double sse_decode_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getFloat64();
   }
 
   @protected
@@ -534,18 +867,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
-  }
-
-  @protected
   void sse_encode_AnyhowException(
     AnyhowException self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.message, serializer);
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    RushSequencer self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as RushSequencerImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
   }
 
   @protected
@@ -557,6 +897,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as RushSynthImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    RushSequencer self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as RushSequencerImpl).frbInternalSseEncode(move: false),
       serializer,
     );
   }
@@ -576,6 +929,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+  sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    RushSequencer self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as RushSequencerImpl).frbInternalSseEncode(move: false),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth(
     RushSynth self,
     SseSerializer serializer,
@@ -583,6 +949,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as RushSynthImpl).frbInternalSseEncode(move: false),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+    RushSequencer self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as RushSequencerImpl).frbInternalSseEncode(move: null),
       serializer,
     );
   }
@@ -604,6 +983,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_f_64(double self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putFloat64(self);
   }
 
   @protected
@@ -638,12 +1029,44 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putBigUint64(self);
   }
+}
 
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
-  }
+@sealed
+class RushSequencerImpl extends RustOpaque implements RushSequencer {
+  // Not to be used by end users
+  RushSequencerImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  RushSequencerImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RushSynthLib.instance.api.rust_arc_increment_strong_count_RushSequencer,
+    rustArcDecrementStrongCount:
+        RushSynthLib.instance.api.rust_arc_decrement_strong_count_RushSequencer,
+    rustArcDecrementStrongCountPtr: RushSynthLib
+        .instance
+        .api
+        .rust_arc_decrement_strong_count_RushSequencerPtr,
+  );
+
+  Future<bool> endOfSequence() => RushSynthLib.instance.api
+      .crateApiSequencerRushSequencerEndOfSequence(that: this);
+
+  Future<void> play({required String midiPath, required bool playLoop}) =>
+      RushSynthLib.instance.api.crateApiSequencerRushSequencerPlay(
+        that: this,
+        midiPath: midiPath,
+        playLoop: playLoop,
+      );
+
+  Future<void> setSpeed({required double speed}) => RushSynthLib.instance.api
+      .crateApiSequencerRushSequencerSetSpeed(that: this, speed: speed);
+
+  Future<void> stop() =>
+      RushSynthLib.instance.api.crateApiSequencerRushSequencerStop(that: this);
 }
 
 @sealed
@@ -658,17 +1081,17 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
 
   static final _kStaticData = RustArcStaticData(
     rustArcIncrementStrongCount:
-        RustLib.instance.api.rust_arc_increment_strong_count_RushSynth,
+        RushSynthLib.instance.api.rust_arc_increment_strong_count_RushSynth,
     rustArcDecrementStrongCount:
-        RustLib.instance.api.rust_arc_decrement_strong_count_RushSynth,
+        RushSynthLib.instance.api.rust_arc_decrement_strong_count_RushSynth,
     rustArcDecrementStrongCountPtr:
-        RustLib.instance.api.rust_arc_decrement_strong_count_RushSynthPtr,
+        RushSynthLib.instance.api.rust_arc_decrement_strong_count_RushSynthPtr,
   );
 
   Future<void> allNotesOff() =>
-      RustLib.instance.api.crateApiSynthRushSynthAllNotesOff(that: this);
+      RushSynthLib.instance.api.crateApiSynthRushSynthAllNotesOff(that: this);
 
-  Future<void> noteOff({required int channel, required int key}) => RustLib
+  Future<void> noteOff({required int channel, required int key}) => RushSynthLib
       .instance
       .api
       .crateApiSynthRushSynthNoteOff(that: this, channel: channel, key: key);
@@ -680,7 +1103,7 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
     required int channel,
     required int key,
     required int velocity,
-  }) => RustLib.instance.api.crateApiSynthRushSynthNoteOn(
+  }) => RushSynthLib.instance.api.crateApiSynthRushSynthNoteOn(
     that: this,
     channel: channel,
     key: key,
@@ -688,11 +1111,11 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
   );
 
   Future<void> pause() =>
-      RustLib.instance.api.crateApiSynthRushSynthPause(that: this);
+      RushSynthLib.instance.api.crateApiSynthRushSynthPause(that: this);
 
   Future<void> start() =>
-      RustLib.instance.api.crateApiSynthRushSynthStart(that: this);
+      RushSynthLib.instance.api.crateApiSynthRushSynthStart(that: this);
 
   Future<void> stop() =>
-      RustLib.instance.api.crateApiSynthRushSynthStop(that: this);
+      RushSynthLib.instance.api.crateApiSynthRushSynthStop(that: this);
 }

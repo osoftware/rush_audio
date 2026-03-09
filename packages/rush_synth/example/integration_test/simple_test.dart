@@ -4,7 +4,7 @@ import 'package:rush_synth/rush_synth.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  setUpAll(() async => await RustLib.init());
+  setUpAll(() async => await RushSynthLib.init());
   test('Can call rust function', () async {
     final synth = RushSynth.newInstance(soundfontPath: 'soundfont.sf2');
     expect(synth, isNotNull);

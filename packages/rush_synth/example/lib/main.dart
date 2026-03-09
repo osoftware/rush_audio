@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_virtual_piano/flutter_virtual_piano.dart';
 import 'package:rush_synth/rush_synth.dart';
+import 'package:rush_synth/util.dart';
 
 Future<void> main() async {
-  await RustLib.init();
+  await RushSynthLib.init();
   runApp(const RushPiano());
 }
 
@@ -16,6 +17,8 @@ class RushPiano extends StatefulWidget {
 
 class _RushPianoState extends State<RushPiano> {
   RushSynth? _synth;
+  RushSequencer? _sequencer;
+  bool _playing = false;
   final _pressed = <int>{};
 
   @override
@@ -27,6 +30,8 @@ class _RushPianoState extends State<RushPiano> {
   Future<void> initStateAsync() async {
     _synth = await Synth.fromAsset('assets/Barharp.sf2');
     _synth!.start();
+
+    _sequencer = await Sequencer.fromAsset('assets/Barharp.sf2');
   }
 
   @override
@@ -40,28 +45,50 @@ class _RushPianoState extends State<RushPiano> {
       ),
       home: Scaffold(
         appBar: AppBar(title: const Text('Rush Harpsichord')),
-        body: Center(
-          child: AspectRatio(
-            aspectRatio: 16 / 4,
-            child: VirtualPiano(
-              noteRange: RangeValues(41, 88),
-              highlightedNoteSets: [
-                HighlightedNoteSet(_pressed, Colors.purple),
-              ],
-              onNotePressed: (key, _) async {
-                await _synth?.noteOn(channel: 0, key: key, velocity: 127);
+        body: Column(
+          spacing: 20.0,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () async {
+                if (_playing) {
+                  await _sequencer?.stop();
+                } else {
+                  await _sequencer?.play(
+                    midiPath: await loadAsset(
+                      'assets/toccata_and_fugue_in_d_minor.mid',
+                    ),
+                    playLoop: true,
+                  );
+                }
                 setState(() {
-                  _pressed.add(key);
+                  _playing = !_playing;
                 });
               },
-              onNoteReleased: (key) async {
-                await _synth?.noteOff(channel: 0, key: key);
-                setState(() {
-                  _pressed.remove(key);
-                });
-              },
+              icon: Icon(_playing ? Icons.stop : Icons.play_arrow),
+              label: Text(_playing ? 'Stop' : 'Play'),
             ),
-          ),
+            AspectRatio(
+              aspectRatio: 16 / 3,
+              child: VirtualPiano(
+                noteRange: RangeValues(41, 88),
+                highlightedNoteSets: [
+                  HighlightedNoteSet(_pressed, Colors.purple),
+                ],
+                onNotePressed: (key, _) async {
+                  await _synth?.noteOn(channel: 0, key: key, velocity: 127);
+                  setState(() {
+                    _pressed.add(key);
+                  });
+                },
+                onNoteReleased: (key) async {
+                  await _synth?.noteOff(channel: 0, key: key);
+                  setState(() {
+                    _pressed.remove(key);
+                  });
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -71,6 +98,7 @@ class _RushPianoState extends State<RushPiano> {
   void dispose() {
     _synth?.allNotesOff();
     _synth?.dispose();
+    _sequencer?.dispose();
     super.dispose();
   }
 }
