@@ -1,8 +1,10 @@
 name: rush_synth
-description: "A new Flutter FFI plugin project."
+description: "A high-performance Flutter plugin for real-time MIDI synthesis and playback."
 version: 0.0.1
-homepage:
+homepage: https://github.com/osoftware/rush_audio
+repository: https://github.com/osoftware/rush_audio
 resolution: workspace
+topics: ["midi", "audio", "soundfont", "synth", "sequencer"]
 
 environment:
   sdk: ^3.10.0
