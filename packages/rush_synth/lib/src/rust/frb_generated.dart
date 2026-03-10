@@ -1062,7 +1062,7 @@ class RushSequencerImpl extends RustOpaque implements RushSequencer {
         playLoop: playLoop,
       );
 
-  Future<void> setSpeed({required double speed}) => RushSynthLib.instance.api
+  Future<void> setSpeed(double speed) => RushSynthLib.instance.api
       .crateApiSequencerRushSequencerSetSpeed(that: this, speed: speed);
 
   Future<void> stop() =>

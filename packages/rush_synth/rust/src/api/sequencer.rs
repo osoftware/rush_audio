@@ -4,7 +4,11 @@ use std::time::Duration;
 
 use anyhow::{Context, Result, anyhow};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use cpal::{Device, FromSample, Sample, SampleFormat, SizedSample, Stream, StreamConfig, SupportedStreamConfig};
+use cpal::{
+    Device, FromSample, Sample, SampleFormat, SizedSample, Stream, StreamConfig,
+    SupportedStreamConfig,
+};
+use flutter_rust_bridge::frb;
 use rustysynth::{MidiFile, MidiFileSequencer, SoundFont, Synthesizer, SynthesizerSettings};
 
 pub struct RushSequencer {
@@ -73,6 +77,7 @@ impl RushSequencer {
         }
     }
 
+    #[frb(positional)]
     pub fn set_speed(&mut self, speed: f64) {
         let mut guard = self.sequencer.lock().unwrap();
         guard.set_speed(speed);

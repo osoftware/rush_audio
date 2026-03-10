@@ -19,6 +19,7 @@ class _RushPianoState extends State<RushPiano> {
   RushSynth? _synth;
   RushSequencer? _sequencer;
   bool _playing = false;
+  double _speed = 1.0;
   final _pressed = <int>{};
 
   @override
@@ -48,24 +49,43 @@ class _RushPianoState extends State<RushPiano> {
         body: Column(
           spacing: 20.0,
           children: [
-            ElevatedButton.icon(
-              onPressed: () async {
-                if (_playing) {
-                  await _sequencer?.stop();
-                } else {
-                  await _sequencer?.play(
-                    midiPath: await loadAsset(
-                      'assets/toccata_and_fugue_in_d_minor.mid',
-                    ),
-                    playLoop: true,
-                  );
-                }
-                setState(() {
-                  _playing = !_playing;
-                });
-              },
-              icon: Icon(_playing ? Icons.stop : Icons.play_arrow),
-              label: Text(_playing ? 'Stop' : 'Play'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    if (_playing) {
+                      await _sequencer?.stop();
+                    } else {
+                      await _sequencer?.play(
+                        midiPath: await loadAsset(
+                          'assets/toccata_and_fugue_in_d_minor.mid',
+                        ),
+                        playLoop: true,
+                      );
+                    }
+                    setState(() {
+                      _playing = !_playing;
+                    });
+                  },
+                  icon: Icon(_playing ? Icons.stop : Icons.play_arrow),
+                  label: Text(_playing ? 'Stop' : 'Play'),
+                ),
+                SizedBox(width: 20.0),
+                Text("Speed ${_speed.toStringAsPrecision(2)}"),
+                Slider.adaptive(
+                  value: _speed,
+                  min: 0.5,
+                  max: 2.0,
+                  label: 'Speed',
+                  onChanged: (s) {
+                    _sequencer?.setSpeed(s);
+                    setState(() {
+                      _speed = s;
+                    });
+                  },
+                ),
+              ],
             ),
             AspectRatio(
               aspectRatio: 16 / 3,

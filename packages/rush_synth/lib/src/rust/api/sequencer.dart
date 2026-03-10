@@ -21,7 +21,7 @@ abstract class RushSequencer implements RustOpaqueInterface {
 
   Future<void> play({required String midiPath, required bool playLoop});
 
-  Future<void> setSpeed({required double speed});
+  Future<void> setSpeed(double speed);
 
   Future<void> stop();
 }
