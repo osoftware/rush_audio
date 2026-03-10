@@ -67,7 +67,7 @@ class RushSynthLib
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => -507580927;
+  int get rustContentHash => -93607862;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -78,11 +78,11 @@ class RushSynthLib
 }
 
 abstract class RushSynthLibApi extends BaseApi {
-  Future<bool> crateApiSequencerRushSequencerEndOfSequence({
+  bool crateApiSequencerRushSequencerEndOfSequence({
     required RushSequencer that,
   });
 
-  Future<RushSequencer> crateApiSequencerRushSequencerNew({
+  Future<RushSequencer> crateApiSequencerRushSequencerFromFile({
     required String soundfontPath,
   });
 
@@ -91,6 +91,8 @@ abstract class RushSynthLibApi extends BaseApi {
     required String midiPath,
     required bool playLoop,
   });
+
+  double crateApiSequencerRushSequencerPosition({required RushSequencer that});
 
   Future<void> crateApiSequencerRushSequencerSetSpeed({
     required RushSequencer that,
@@ -103,7 +105,9 @@ abstract class RushSynthLibApi extends BaseApi {
 
   Future<void> crateApiSynthRushSynthAllNotesOff({required RushSynth that});
 
-  Future<RushSynth> crateApiSynthRushSynthNew({required String soundfontPath});
+  Future<RushSynth> crateApiSynthRushSynthFromFile({
+    required String soundfontPath,
+  });
 
   Future<void> crateApiSynthRushSynthNoteOff({
     required RushSynth that,
@@ -152,23 +156,18 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
   });
 
   @override
-  Future<bool> crateApiSequencerRushSequencerEndOfSequence({
+  bool crateApiSequencerRushSequencerEndOfSequence({
     required RushSequencer that,
   }) {
-    return handler.executeNormal(
-      NormalTask(
-        callFfi: (port_) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
             that,
             serializer,
           );
-          pdeCallFfi(
-            generalizedFrbRustBinding,
-            serializer,
-            funcId: 1,
-            port: port_,
-          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
@@ -188,7 +187,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
       );
 
   @override
-  Future<RushSequencer> crateApiSequencerRushSequencerNew({
+  Future<RushSequencer> crateApiSequencerRushSequencerFromFile({
     required String soundfontPath,
   }) {
     return handler.executeNormal(
@@ -208,16 +207,16 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiSequencerRushSequencerNewConstMeta,
+        constMeta: kCrateApiSequencerRushSequencerFromFileConstMeta,
         argValues: [soundfontPath],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSequencerRushSequencerNewConstMeta =>
+  TaskConstMeta get kCrateApiSequencerRushSequencerFromFileConstMeta =>
       const TaskConstMeta(
-        debugName: "RushSequencer_new",
+        debugName: "RushSequencer_from_file",
         argNames: ["soundfontPath"],
       );
 
@@ -262,6 +261,35 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
       );
 
   @override
+  double crateApiSequencerRushSequencerPosition({required RushSequencer that}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSequencer(
+            that,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_f_64,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiSequencerRushSequencerPositionConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiSequencerRushSequencerPositionConstMeta =>
+      const TaskConstMeta(
+        debugName: "RushSequencer_position",
+        argNames: ["that"],
+      );
+
+  @override
   Future<void> crateApiSequencerRushSequencerSetSpeed({
     required RushSequencer that,
     required double speed,
@@ -278,7 +306,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 4,
+            funcId: 5,
             port: port_,
           );
         },
@@ -314,7 +342,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 5,
+            funcId: 6,
             port: port_,
           );
         },
@@ -345,7 +373,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 6,
+            funcId: 7,
             port: port_,
           );
         },
@@ -367,7 +395,9 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
       );
 
   @override
-  Future<RushSynth> crateApiSynthRushSynthNew({required String soundfontPath}) {
+  Future<RushSynth> crateApiSynthRushSynthFromFile({
+    required String soundfontPath,
+  }) {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -376,7 +406,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 7,
+            funcId: 8,
             port: port_,
           );
         },
@@ -385,17 +415,18 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRushSynth,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiSynthRushSynthNewConstMeta,
+        constMeta: kCrateApiSynthRushSynthFromFileConstMeta,
         argValues: [soundfontPath],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiSynthRushSynthNewConstMeta => const TaskConstMeta(
-    debugName: "RushSynth_new",
-    argNames: ["soundfontPath"],
-  );
+  TaskConstMeta get kCrateApiSynthRushSynthFromFileConstMeta =>
+      const TaskConstMeta(
+        debugName: "RushSynth_from_file",
+        argNames: ["soundfontPath"],
+      );
 
   @override
   Future<void> crateApiSynthRushSynthNoteOff({
@@ -416,7 +447,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 9,
             port: port_,
           );
         },
@@ -458,7 +489,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 9,
+            funcId: 10,
             port: port_,
           );
         },
@@ -492,7 +523,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 11,
             port: port_,
           );
         },
@@ -523,7 +554,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 11,
+            funcId: 12,
             port: port_,
           );
         },
@@ -554,7 +585,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 12,
+            funcId: 13,
             port: port_,
           );
         },
@@ -1052,9 +1083,13 @@ class RushSequencerImpl extends RustOpaque implements RushSequencer {
         .rust_arc_decrement_strong_count_RushSequencerPtr,
   );
 
-  Future<bool> endOfSequence() => RushSynthLib.instance.api
+  /// Gets a value that indicates whether the current playback position is at the end of the sequence.
+  /// If the `play` method has not yet been called, this value will be `true`.
+  /// This value will never be `true` if loop playback is enabled.
+  bool get endOfSequence => RushSynthLib.instance.api
       .crateApiSequencerRushSequencerEndOfSequence(that: this);
 
+  /// Play a MIDI file.
   Future<void> play({required String midiPath, required bool playLoop}) =>
       RushSynthLib.instance.api.crateApiSequencerRushSequencerPlay(
         that: this,
@@ -1062,9 +1097,17 @@ class RushSequencerImpl extends RustOpaque implements RushSequencer {
         playLoop: playLoop,
       );
 
+  /// Gets the current playback position in seconds.
+  double get position => RushSynthLib.instance.api
+      .crateApiSequencerRushSequencerPosition(that: this);
+
+  /// Set playback speed.
+  /// 1.0 means normal speed derived from the tempo and ticksPerBeat in MIDI file.
+  /// The tempo will be multiplied by this value during playback.
   Future<void> setSpeed(double speed) => RushSynthLib.instance.api
       .crateApiSequencerRushSequencerSetSpeed(that: this, speed: speed);
 
+  /// Stop playing the current MIDI file.
   Future<void> stop() =>
       RushSynthLib.instance.api.crateApiSequencerRushSequencerStop(that: this);
 }
@@ -1088,20 +1131,28 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
         RushSynthLib.instance.api.rust_arc_decrement_strong_count_RushSynthPtr,
   );
 
+  /// Turn off all MIDI notes that are on
   Future<void> allNotesOff() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthAllNotesOff(that: this);
 
   /// Turn a MIDI note off
-  /// channel: MIDI channel (0-15)
-  /// key: MIDI key (0-127)
+  ///
+  /// # Arguments
+  ///
+  /// * `channel` - The channel of the note.
+  /// * `key` - The key of the note.
   Future<void> noteOff({required int channel, required int key}) => RushSynthLib
       .instance
       .api
       .crateApiSynthRushSynthNoteOff(that: this, channel: channel, key: key);
 
-  /// channel: MIDI channel (0-15)
-  /// key: MIDI key (0-127)
-  /// velocity: MIDI velocity (0-127)
+  /// Turn a MIDI note on.
+  ///
+  /// # Arguments
+  ///
+  /// * `channel` - The channel of the note.
+  /// * `key` - The key of the note.
+  /// * `velocity` - The velocity of the note.
   Future<void> noteOn({
     required int channel,
     required int key,
@@ -1113,11 +1164,11 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
     velocity: velocity,
   );
 
-  /// Pause the stream without releasing resources
+  /// Pause the stream without releasing resources.
   Future<void> pause() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthPause(that: this);
 
-  /// Start a new stream or resume a paused stream
+  /// Start a new stream or resume a paused stream.
   Future<void> start() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthStart(that: this);
 

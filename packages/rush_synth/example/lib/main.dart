@@ -29,10 +29,10 @@ class _RushPianoState extends State<RushPiano> {
   }
 
   Future<void> initStateAsync() async {
-    _synth = await Synth.fromAsset('assets/Barharp.sf2');
+    _synth = await RushSynth.fromAsset('assets/Barharp.sf2');
     _synth!.start();
 
-    _sequencer = await Sequencer.fromAsset('assets/Barharp.sf2');
+    _sequencer = await RushSequencer.fromAsset('assets/Barharp.sf2');
   }
 
   @override

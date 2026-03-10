@@ -11,6 +11,12 @@ use cpal::{
 use flutter_rust_bridge::frb;
 use rustysynth::{MidiFile, MidiFileSequencer, SoundFont, Synthesizer, SynthesizerSettings};
 
+#[frb(dart_code = "
+    import '../../../util.dart';
+    /// Create a new RushSequencer using a soundfont from the assets bundle.
+    static Future<RushSequencer> fromAsset(String asset) async =>
+      RushSequencer.fromFile(await loadAsset(asset));
+")]
 pub struct RushSequencer {
     sequencer: Arc<Mutex<MidiFileSequencer>>,
     stream: Option<Stream>,
@@ -20,7 +26,9 @@ unsafe impl Sync for RushSequencer {}
 unsafe impl Send for RushSequencer {}
 
 impl RushSequencer {
-    pub fn new(soundfont_path: String) -> Result<Self> {
+    /// Create a new RushSequencer using a soundfont from the file system.
+    #[frb(positional)]
+    pub fn from_file(soundfont_path: String) -> Result<Self> {
         let host = cpal::default_host();
         let device = host
             .default_output_device()
@@ -54,6 +62,7 @@ impl RushSequencer {
         })
     }
 
+    /// Play a MIDI file.
     pub fn play(&mut self, midi_path: String, play_loop: bool) -> Result<()> {
         let mut midi_file = fs::File::open(midi_path).context("Failed to open soundfont file")?;
         let midi = MidiFile::new(&mut midi_file).context("Failed to parse MIDI file")?;
@@ -67,6 +76,7 @@ impl RushSequencer {
         }
     }
 
+    /// Stop playing the current MIDI file.
     pub fn stop(&mut self) -> Result<()> {
         let mut guard = self.sequencer.lock().unwrap();
         guard.stop();
@@ -77,12 +87,26 @@ impl RushSequencer {
         }
     }
 
+    /// Set playback speed.
+    /// 1.0 means normal speed derived from the tempo and ticksPerBeat in MIDI file.
+    /// The tempo will be multiplied by this value during playback.
     #[frb(positional)]
     pub fn set_speed(&mut self, speed: f64) {
         let mut guard = self.sequencer.lock().unwrap();
         guard.set_speed(speed);
     }
 
+    /// Gets the current playback position in seconds.
+    #[frb(sync, getter)]
+    pub fn position(&self) -> f64 {
+        let guard = self.sequencer.lock().unwrap();
+        guard.get_position()
+    }
+    
+    /// Gets a value that indicates whether the current playback position is at the end of the sequence.
+    /// If the `play` method has not yet been called, this value will be `true`.
+    /// This value will never be `true` if loop playback is enabled.
+    #[frb(sync, getter)]
     pub fn end_of_sequence(&self) -> bool {
         let guard = self.sequencer.lock().unwrap();
         guard.end_of_sequence()

@@ -3,6 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../../util.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -11,17 +12,32 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RushSequencer>>
 abstract class RushSequencer implements RustOpaqueInterface {
-  Future<bool> endOfSequence();
+  /// Gets a value that indicates whether the current playback position is at the end of the sequence.
+  /// If the `play` method has not yet been called, this value will be `true`.
+  /// This value will never be `true` if loop playback is enabled.
+  bool get endOfSequence;
 
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<RushSequencer> newInstance({required String soundfontPath}) =>
-      RushSynthLib.instance.api.crateApiSequencerRushSequencerNew(
-        soundfontPath: soundfontPath,
-      );
+  /// Create a new RushSequencer using a soundfont from the file system.
+  static Future<RushSequencer> fromFile(String soundfontPath) => RushSynthLib
+      .instance
+      .api
+      .crateApiSequencerRushSequencerFromFile(soundfontPath: soundfontPath);
 
+  /// Play a MIDI file.
   Future<void> play({required String midiPath, required bool playLoop});
 
+  /// Gets the current playback position in seconds.
+  double get position;
+
+  /// Set playback speed.
+  /// 1.0 means normal speed derived from the tempo and ticksPerBeat in MIDI file.
+  /// The tempo will be multiplied by this value during playback.
   Future<void> setSpeed(double speed);
 
+  /// Stop playing the current MIDI file.
   Future<void> stop();
+
+  /// Create a new RushSequencer using a soundfont from the assets bundle.
+  static Future<RushSequencer> fromAsset(String asset) async =>
+      RushSequencer.fromFile(await loadAsset(asset));
 }

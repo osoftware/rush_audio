@@ -8,8 +8,15 @@ use cpal::{
     Device, FromSample, Sample, SampleFormat, SizedSample, Stream, StreamConfig,
     SupportedStreamConfig,
 };
+use flutter_rust_bridge::frb;
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 
+#[frb(dart_code = "
+    import '../../../util.dart';
+    /// Create a new RushSynth using a soundfont from the assets bundle.
+    static Future<RushSynth> fromAsset(String asset) async =>
+      RushSynth.fromFile(await loadAsset(asset));
+")]
 pub struct RushSynth {
     device: Device,
     config: SupportedStreamConfig,
@@ -21,7 +28,9 @@ unsafe impl Sync for RushSynth {}
 unsafe impl Send for RushSynth {}
 
 impl RushSynth {
-    pub fn new(soundfont_path: String) -> Result<Self> {
+    /// Create a new RushSynth using a soundfont from the file system.
+    #[frb(positional)]
+    pub fn from_file(soundfont_path: String) -> Result<Self> {
         let host = cpal::default_host();
         let device = host
             .default_output_device()
@@ -60,7 +69,7 @@ impl RushSynth {
         Ok(self.stream.as_ref().unwrap())
     }
 
-    /// Start a new stream or resume a paused stream
+    /// Start a new stream or resume a paused stream.
     pub fn start(&mut self) -> Result<()> {
         let stream = match &self.stream {
             Some(stream) => stream,
@@ -69,7 +78,7 @@ impl RushSynth {
         stream.play().context("Failed to start output stream")
     }
 
-    /// Pause the stream without releasing resources
+    /// Pause the stream without releasing resources.
     pub fn pause(&mut self) -> Result<()> {
         match &self.stream {
             Some(stream) => stream.pause().context("Failed to pause output stream"),
@@ -77,24 +86,30 @@ impl RushSynth {
         }
     }
 
-    // Turn a MIDI note on.
-    /// channel: MIDI channel (0-15)
-    /// key: MIDI key (0-127)
-    /// velocity: MIDI velocity (0-127)
+    /// Turn a MIDI note on.
+    /// 
+    /// # Arguments
+    /// 
+    /// * `channel` - The channel of the note.
+    /// * `key` - The key of the note.
+    /// * `velocity` - The velocity of the note.
     pub fn note_on(&self, channel: i32, key: i32, velocity: i32) {
         let mut s = self.synth.lock().unwrap();
         s.note_on(channel, key, velocity);
     }
 
     /// Turn a MIDI note off
-    /// channel: MIDI channel (0-15)
-    /// key: MIDI key (0-127)
+    /// 
+    /// # Arguments
+    /// 
+    /// * `channel` - The channel of the note.
+    /// * `key` - The key of the note.
     pub fn note_off(&self, channel: i32, key: i32) {
         let mut s = self.synth.lock().unwrap();
         s.note_off(channel, key);
     }
 
-    // Turn off all MIDI notes that are on
+    /// Turn off all MIDI notes that are on
     pub fn all_notes_off(&self) {
         let mut s = self.synth.lock().unwrap();
         s.note_off_all(true);

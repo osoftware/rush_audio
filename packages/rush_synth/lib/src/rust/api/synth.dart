@@ -3,6 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import '../../../util.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -11,34 +12,46 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RushSynth>>
 abstract class RushSynth implements RustOpaqueInterface {
+  /// Turn off all MIDI notes that are on
   Future<void> allNotesOff();
 
-  // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
-  static Future<RushSynth> newInstance({required String soundfontPath}) =>
-      RushSynthLib.instance.api.crateApiSynthRushSynthNew(
-        soundfontPath: soundfontPath,
-      );
+  /// Create a new RushSynth using a soundfont from the file system.
+  static Future<RushSynth> fromFile(String soundfontPath) => RushSynthLib
+      .instance
+      .api
+      .crateApiSynthRushSynthFromFile(soundfontPath: soundfontPath);
 
   /// Turn a MIDI note off
-  /// channel: MIDI channel (0-15)
-  /// key: MIDI key (0-127)
+  ///
+  /// # Arguments
+  ///
+  /// * `channel` - The channel of the note.
+  /// * `key` - The key of the note.
   Future<void> noteOff({required int channel, required int key});
 
-  /// channel: MIDI channel (0-15)
-  /// key: MIDI key (0-127)
-  /// velocity: MIDI velocity (0-127)
+  /// Turn a MIDI note on.
+  ///
+  /// # Arguments
+  ///
+  /// * `channel` - The channel of the note.
+  /// * `key` - The key of the note.
+  /// * `velocity` - The velocity of the note.
   Future<void> noteOn({
     required int channel,
     required int key,
     required int velocity,
   });
 
-  /// Pause the stream without releasing resources
+  /// Pause the stream without releasing resources.
   Future<void> pause();
 
-  /// Start a new stream or resume a paused stream
+  /// Start a new stream or resume a paused stream.
   Future<void> start();
 
   /// Stop the stream and release resources
   Future<void> stop();
+
+  /// Create a new RushSynth using a soundfont from the assets bundle.
+  static Future<RushSynth> fromAsset(String asset) async =>
+      RushSynth.fromFile(await loadAsset(asset));
 }
