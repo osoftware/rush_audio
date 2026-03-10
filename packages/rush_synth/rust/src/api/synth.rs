@@ -4,10 +4,15 @@ use std::time::Duration;
 
 use anyhow::{Context, Result, anyhow};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use cpal::{Device, FromSample, Sample, SizedSample, Stream, StreamConfig, SupportedStreamConfig};
+use cpal::{
+    Device, FromSample, Sample, SampleFormat, SizedSample, Stream, StreamConfig,
+    SupportedStreamConfig,
+};
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 
 pub struct RushSynth {
+    device: Device,
+    config: SupportedStreamConfig,
     synth: Arc<Mutex<Synthesizer>>,
     stream: Option<cpal::Stream>,
 }
@@ -32,35 +37,43 @@ impl RushSynth {
         let synthesizer = Synthesizer::new(&Arc::new(sound_font), &settings)
             .context("Failed to initialize synthesizer")?;
 
-        let synth = Arc::new(Mutex::new(synthesizer));
-        let synth_for_cb = synth.clone();
+        let rush_synth = Self {
+            device,
+            config,
+            synth: Arc::new(Mutex::new(synthesizer)),
+            stream: None,
+        };
 
-        let stream = match config.sample_format() {
-            cpal::SampleFormat::F32 => build_stream::<f32>(&device, &config, synth_for_cb),
-            cpal::SampleFormat::I16 => build_stream::<i16>(&device, &config, synth_for_cb),
-            cpal::SampleFormat::U16 => build_stream::<u16>(&device, &config, synth_for_cb),
+        Ok(rush_synth)
+    }
+
+    fn build_stream(&mut self) -> Result<&Stream> {
+        let synth_for_cb = self.synth.clone();
+        let stream = match (&self.config).sample_format() {
+            SampleFormat::F32 => build_stream::<f32>(&self.device, &self.config, synth_for_cb),
+            SampleFormat::I16 => build_stream::<i16>(&self.device, &self.config, synth_for_cb),
+            SampleFormat::U16 => build_stream::<u16>(&self.device, &self.config, synth_for_cb),
             _ => Err(anyhow!("Unsupported sample format")),
         }?;
 
-        stream.pause().context("Failed to pause output stream")?;
-
-        Ok(Self {
-            synth,
-            stream: Some(stream),
-        })
+        self.stream = Some(stream);
+        Ok(self.stream.as_ref().unwrap())
     }
 
+    /// Start a new stream or resume a paused stream
     pub fn start(&mut self) -> Result<()> {
-        match &self.stream {
-            Some(stream) => stream.play().context("Failed to start output stream"),
-            None => Err(anyhow!("No output stream to start")),
-        }
+        let stream = match &self.stream {
+            Some(stream) => stream,
+            None => self.build_stream()?,
+        };
+        stream.play().context("Failed to start output stream")
     }
-    
+
+    /// Pause the stream without releasing resources
     pub fn pause(&mut self) -> Result<()> {
         match &self.stream {
             Some(stream) => stream.pause().context("Failed to pause output stream"),
-            None => Err(anyhow!("No output stream to pause")),
+            None => Ok(()),
         }
     }
 
@@ -73,16 +86,21 @@ impl RushSynth {
         s.note_on(channel, key, velocity);
     }
 
+    /// Turn a MIDI note off
+    /// channel: MIDI channel (0-15)
+    /// key: MIDI key (0-127)
     pub fn note_off(&self, channel: i32, key: i32) {
         let mut s = self.synth.lock().unwrap();
         s.note_off(channel, key);
     }
 
+    // Turn off all MIDI notes that are on
     pub fn all_notes_off(&self) {
         let mut s = self.synth.lock().unwrap();
         s.note_off_all(true);
     }
 
+    /// Stop the stream and release resources
     pub fn stop(&mut self) {
         if let Some(stream) = self.stream.take() {
             stream.pause().ok();

@@ -1091,6 +1091,9 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
   Future<void> allNotesOff() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthAllNotesOff(that: this);
 
+  /// Turn a MIDI note off
+  /// channel: MIDI channel (0-15)
+  /// key: MIDI key (0-127)
   Future<void> noteOff({required int channel, required int key}) => RushSynthLib
       .instance
       .api
@@ -1110,12 +1113,15 @@ class RushSynthImpl extends RustOpaque implements RushSynth {
     velocity: velocity,
   );
 
+  /// Pause the stream without releasing resources
   Future<void> pause() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthPause(that: this);
 
+  /// Start a new stream or resume a paused stream
   Future<void> start() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthStart(that: this);
 
+  /// Stop the stream and release resources
   Future<void> stop() =>
       RushSynthLib.instance.api.crateApiSynthRushSynthStop(that: this);
 }

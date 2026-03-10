@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use anyhow::{Context, Result, anyhow};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use cpal::{Device, FromSample, Sample, SizedSample, Stream, StreamConfig, SupportedStreamConfig};
+use cpal::{Device, FromSample, Sample, SampleFormat, SizedSample, Stream, StreamConfig, SupportedStreamConfig};
 use rustysynth::{MidiFile, MidiFileSequencer, SoundFont, Synthesizer, SynthesizerSettings};
 
 pub struct RushSequencer {
@@ -36,9 +36,9 @@ impl RushSequencer {
         let sequencer_for_cb = sequencer.clone();
 
         let stream = match config.sample_format() {
-            cpal::SampleFormat::F32 => build_stream::<f32>(&device, &config, sequencer_for_cb),
-            cpal::SampleFormat::I16 => build_stream::<i16>(&device, &config, sequencer_for_cb),
-            cpal::SampleFormat::U16 => build_stream::<u16>(&device, &config, sequencer_for_cb),
+            SampleFormat::F32 => build_stream::<f32>(&device, &config, sequencer_for_cb),
+            SampleFormat::I16 => build_stream::<i16>(&device, &config, sequencer_for_cb),
+            SampleFormat::U16 => build_stream::<u16>(&device, &config, sequencer_for_cb),
             _ => Err(anyhow!("Unsupported sample format")),
         }?;
 

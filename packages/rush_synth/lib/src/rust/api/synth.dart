@@ -6,7 +6,7 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `build_stream`, `fill_output_buffer`
+// These functions are ignored because they are not marked as `pub`: `build_stream`, `build_stream`, `fill_output_buffer`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `drop`
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RushSynth>>
@@ -19,6 +19,9 @@ abstract class RushSynth implements RustOpaqueInterface {
         soundfontPath: soundfontPath,
       );
 
+  /// Turn a MIDI note off
+  /// channel: MIDI channel (0-15)
+  /// key: MIDI key (0-127)
   Future<void> noteOff({required int channel, required int key});
 
   /// channel: MIDI channel (0-15)
@@ -30,9 +33,12 @@ abstract class RushSynth implements RustOpaqueInterface {
     required int velocity,
   });
 
+  /// Pause the stream without releasing resources
   Future<void> pause();
 
+  /// Start a new stream or resume a paused stream
   Future<void> start();
 
+  /// Stop the stream and release resources
   Future<void> stop();
 }
