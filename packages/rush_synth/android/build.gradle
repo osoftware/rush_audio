@@ -1,6 +1,6 @@
 // The Android Gradle Plugin builds the native code with the Android NDK.
 
-group 'com.flutter_rust_bridge.rush_synth'
+group 'pl.net.orb.rush_synth'
 version '1.0'
 
 buildscript {
@@ -12,6 +12,7 @@ buildscript {
     dependencies {
         // The Android Gradle Plugin knows how to build native code with the NDK.
         classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.20'
     }
 }
 
@@ -23,10 +24,11 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'com.flutter_rust_bridge.rush_synth'
+        namespace 'pl.net.orb.rush_synth'
     }
 
     // Bumping the plugin compileSdkVersion requires all clients of this plugin
@@ -44,8 +46,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 26
     }
 }
 
