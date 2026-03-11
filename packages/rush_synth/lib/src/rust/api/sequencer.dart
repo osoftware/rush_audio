@@ -3,7 +3,7 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
-import '../../../util.dart';
+import '../../util.dart';
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -24,7 +24,7 @@ abstract class RushSequencer implements RustOpaqueInterface {
       .crateApiSequencerRushSequencerFromFile(soundfontPath: soundfontPath);
 
   /// Play a MIDI file.
-  Future<void> play({required String midiPath, required bool playLoop});
+  Future<void> play({required String midiPath, bool playLoop = false});
 
   /// Gets the current playback position in seconds.
   double get position;

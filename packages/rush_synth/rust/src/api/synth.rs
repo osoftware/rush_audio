@@ -12,7 +12,7 @@ use flutter_rust_bridge::frb;
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 
 #[frb(dart_code = "
-    import '../../../util.dart';
+    import '../../util.dart';
     /// Create a new RushSynth using a soundfont from the assets bundle.
     static Future<RushSynth> fromAsset(String asset) async =>
       RushSynth.fromFile(await loadAsset(asset));

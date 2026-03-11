@@ -12,7 +12,7 @@ use flutter_rust_bridge::frb;
 use rustysynth::{MidiFile, MidiFileSequencer, SoundFont, Synthesizer, SynthesizerSettings};
 
 #[frb(dart_code = "
-    import '../../../util.dart';
+    import '../../util.dart';
     /// Create a new RushSequencer using a soundfont from the assets bundle.
     static Future<RushSequencer> fromAsset(String asset) async =>
       RushSequencer.fromFile(await loadAsset(asset));
@@ -63,7 +63,12 @@ impl RushSequencer {
     }
 
     /// Play a MIDI file.
-    pub fn play(&mut self, midi_path: String, play_loop: bool) -> Result<()> {
+    #[frb]
+    pub fn play(
+        &mut self,
+        midi_path: String,
+        #[frb(default = false)] play_loop: bool,
+    ) -> Result<()> {
         let mut midi_file = fs::File::open(midi_path).context("Failed to open soundfont file")?;
         let midi = MidiFile::new(&mut midi_file).context("Failed to parse MIDI file")?;
 
@@ -102,7 +107,7 @@ impl RushSequencer {
         let guard = self.sequencer.lock().unwrap();
         guard.get_position()
     }
-    
+
     /// Gets a value that indicates whether the current playback position is at the end of the sequence.
     /// If the `play` method has not yet been called, this value will be `true`.
     /// This value will never be `true` if loop playback is enabled.

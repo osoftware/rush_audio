@@ -174,6 +174,11 @@ await sequencer.play(
   midiPath: 'path/to/file.mid',
   playLoop: true,
 );
+// or a MIDI asset
+await sequencer.playAsset(
+  midiAsset: 'assets/file.mid',
+  playLoop: true,
+);
 
 // Adjust playback speed (1.0 = normal speed, 0.5 = half speed, 2.0 = double speed)
 await sequencer.setSpeed(1.5);
@@ -193,16 +198,17 @@ sequencer.dispose();
 
 ## Asset Setup
 
-To use SoundFont files from your Flutter project assets:
+To use SoundFont and MIDI files from your Flutter project assets:
 
 1. Create an `assets` folder in your project root
-2. Add your `.sf2` files to this folder
+2. Add your `.sf2` and `.mid` files to this folder
 3. Update your `pubspec.yaml`:
 
 ```yaml
 flutter:
   assets:
     - assets/soundfont.sf2
+    - assets/song.mid
 ```
 
 ## Troubleshooting

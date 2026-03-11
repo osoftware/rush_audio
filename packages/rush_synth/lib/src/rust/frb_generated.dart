@@ -89,7 +89,7 @@ abstract class RushSynthLibApi extends BaseApi {
   Future<void> crateApiSequencerRushSequencerPlay({
     required RushSequencer that,
     required String midiPath,
-    required bool playLoop,
+    bool playLoop = false,
   });
 
   double crateApiSequencerRushSequencerPosition({required RushSequencer that});
@@ -224,7 +224,7 @@ class RushSynthLibApiImpl extends RushSynthLibApiImplPlatform
   Future<void> crateApiSequencerRushSequencerPlay({
     required RushSequencer that,
     required String midiPath,
-    required bool playLoop,
+    bool playLoop = false,
   }) {
     return handler.executeNormal(
       NormalTask(
@@ -1090,7 +1090,7 @@ class RushSequencerImpl extends RustOpaque implements RushSequencer {
       .crateApiSequencerRushSequencerEndOfSequence(that: this);
 
   /// Play a MIDI file.
-  Future<void> play({required String midiPath, required bool playLoop}) =>
+  Future<void> play({required String midiPath, bool playLoop = false}) =>
       RushSynthLib.instance.api.crateApiSequencerRushSequencerPlay(
         that: this,
         midiPath: midiPath,
