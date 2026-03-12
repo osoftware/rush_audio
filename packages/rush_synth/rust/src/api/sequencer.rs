@@ -22,9 +22,6 @@ pub struct RushSequencer {
     stream: Option<Stream>,
 }
 
-unsafe impl Sync for RushSequencer {}
-unsafe impl Send for RushSequencer {}
-
 impl RushSequencer {
     /// Create a new RushSequencer using a soundfont from the file system.
     #[frb(positional)]

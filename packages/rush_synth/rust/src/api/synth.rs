@@ -21,11 +21,8 @@ pub struct RushSynth {
     device: Device,
     config: SupportedStreamConfig,
     synth: Arc<Mutex<Synthesizer>>,
-    stream: Option<cpal::Stream>,
+    stream: Option<Stream>,
 }
-
-unsafe impl Sync for RushSynth {}
-unsafe impl Send for RushSynth {}
 
 impl RushSynth {
     /// Create a new RushSynth using a soundfont from the file system.
@@ -87,9 +84,9 @@ impl RushSynth {
     }
 
     /// Turn a MIDI note on.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `channel` - The channel of the note.
     /// * `key` - The key of the note.
     /// * `velocity` - The velocity of the note.
@@ -99,9 +96,9 @@ impl RushSynth {
     }
 
     /// Turn a MIDI note off
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `channel` - The channel of the note.
     /// * `key` - The key of the note.
     pub fn note_off(&self, channel: i32, key: i32) {
