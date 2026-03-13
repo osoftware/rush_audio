@@ -1,6 +1,6 @@
 name: rush_synth
-description: "A high-performance Flutter plugin for real-time MIDI synthesis and playback."
-version: 0.0.1
+description: "A high-performance Flutter plugin for MIDI synthesis and playback."
+version: 0.1.0
 homepage: https://github.com/osoftware/rush_audio
 repository: https://github.com/osoftware/rush_audio
 resolution: workspace
