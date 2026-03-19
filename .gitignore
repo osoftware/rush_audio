@@ -36,3 +36,6 @@ build/
 /target/
 /Cargo.lock
 /platform-build
+
+# VS Code
+.vscode/settings.json

@@ -1,16 +1,11 @@
 pub mod api;
 mod frb_generated;
 
-#[flutter_rust_bridge::frb(init)]
-pub fn init_app() {
-    flutter_rust_bridge::setup_default_user_utils();
-}
-
 #[cfg(target_os = "android")]
 mod init_android_context {
-    use jni::{objects::JClass, objects::JObject, objects::GlobalRef, JNIEnv};
-    use std::sync::OnceLock;
+    use jni::{JNIEnv, objects::GlobalRef, objects::JClass, objects::JObject};
     use std::ffi::c_void;
+    use std::sync::OnceLock;
 
     static CTX: OnceLock<GlobalRef> = OnceLock::new();
 
@@ -27,5 +22,7 @@ mod init_android_context {
             ndk_context::initialize_android_context(vm, global_ref.as_obj().as_raw() as _);
         }
         CTX.get_or_init(|| global_ref);
+
+        flutter_rust_bridge::setup_default_user_utils();
     }
 }

@@ -1,6 +1,5 @@
 use std::fs;
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
 
 use anyhow::{Context, Result, anyhow};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
@@ -71,6 +70,7 @@ impl RushSequencer {
 
         let mut guard = self.sequencer.lock().unwrap();
         guard.play(&Arc::new(midi), play_loop);
+        drop(guard);
 
         match &self.stream {
             Some(stream) => stream.play().context("Failed to start output stream"),
@@ -119,7 +119,6 @@ impl Drop for RushSequencer {
     fn drop(&mut self) {
         if let Some(stream) = self.stream.take() {
             stream.pause().ok();
-            std::thread::sleep(Duration::from_millis(200));
             drop(stream);
         }
     }
@@ -132,8 +131,8 @@ fn build_stream<T: FromSample<f32> + SizedSample>(
 ) -> Result<Stream> {
     let stream = device
         .build_output_stream(
-            &StreamConfig {
-                buffer_size: cpal::BufferSize::Fixed(128),
+            StreamConfig {
+                buffer_size: cpal::BufferSize::Default,
                 ..config.config()
             },
             move |data: &mut [T], _| fill_output_buffer(data, &sequencer),
